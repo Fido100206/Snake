@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SnakeMove : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class SnakeMove : MonoBehaviour
     List<Transform> segments;        //variable to store the parts of the snake
 
 
-    public Transform bodyPrefab;        //place to tore the body
+    public Transform bodyPrefab;       //place to s tore the body
 
     // Start is called before the first frame update
     void Start()
@@ -29,24 +30,40 @@ public class SnakeMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W) && goingDown != true)
         {
             direction = Vector2.up;
+            goingUp = true;
+            goingLeft = false;
+            goingDown = false;
+            goingRight = false;
         }
 
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetKeyDown(KeyCode.A) && goingRight == false)
         {
             direction = Vector2.left;
+            goingUp = false;
+            goingLeft = true;
+            goingDown = false;
+            goingRight = false;
         }
         
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.S) && goingUp != true)
         {
             direction = Vector2.down;
+            goingUp = false;
+            goingLeft = false;
+            goingDown = true;
+            goingRight = false;
         }
 
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D) && goingLeft == false)
         {
             direction = Vector2.right;
+            goingUp = false;
+            goingLeft = false;
+            goingDown = false;
+            goingRight = true;
         }
     }
     void FixedUpdate()
@@ -68,7 +85,9 @@ public class SnakeMove : MonoBehaviour
 
        segment.position = segments[segments.Count - 1].position;
        segments.Add(segment);
+       
     }
+
 
 
     void OnTriggerEnter2D (Collider2D other)
@@ -84,6 +103,8 @@ public class SnakeMove : MonoBehaviour
         {
             Debug.Log ("hit");
             Grow();
+
+            Time.fixedDeltaTime -= 0.001f;
         }
 
         else if(other.tag == "Obstacle")
